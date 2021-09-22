@@ -1,0 +1,14 @@
+# Check the column data type. 'Date' column is of type object
+tweets.info() 
+# pass dayfirst as true as source 'date' column in source data has day of the month as first value 
+tweets['Date'] = pd.to_datetime(tweets['Date'],dayfirst=True)
+
+# 'Date' column should be of type datetime64[ns] after to_datetime conversion
+tweets.info() 
+
+#create week_number and week_day,rate columns 
+tweets[['week_number','week_day']] =tweets['Date'].dt.isocalendar()[['week','day']]
+tweets['rate'] = tweets['Engagement']/tweets['Impression']
+
+#check for nulls
+tweets.isnull().sum()

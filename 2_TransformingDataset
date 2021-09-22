@@ -10,5 +10,15 @@ tweets.info()
 tweets[['week_number','week_day']] =tweets['Date'].dt.isocalendar()[['week','day']]
 tweets['rate'] = tweets['Engagement']/tweets['Impression']
 
+pivot_tweets = tweets.pivot_table('rate', 'week_number', 'week_day')
+pivot_tweets
+
 #check for nulls
-tweets.isnull().sum()
+pivot_tweets.isnull().sum()
+
+#drop na
+pivot_tweets.dropna(how='any',inplace=True)
+pivot_tweets
+
+#Verify there are no nulls
+pivot_tweets.isnull().sum()

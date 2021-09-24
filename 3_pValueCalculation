@@ -1,0 +1,42 @@
+import bumpy as np
+import pandas as pd
+import random
+
+def calc_pvalue(data1,data2):
+  mean1 = data1.mean()
+  mean2 = data2.mean()
+
+  extreme_mean_diff= abs(mean1-mean2)
+  counter=0
+  data = np.hstack((data1,data2))  
+  loop = 30000
+
+  for _ in range(loop):
+    np.random.shuffle(data)
+    new_data1 = data[0:len(data1)]
+    new_data2 = data[len(data1):len(data1)+len(data2)]
+    mean_diff=abs(new_data1.mean()-new_data2.mean())
+    if(mean_diff > extreme_mean_diff):
+     counter=+1
+
+  return counter/loop
+
+np.random.seed(1)
+
+# Move Friday as the column to allow easy split 
+old_cols = pivot_tweets.columns.values 
+new_cols= [1, 2, 3, 4, 6, 7,5]
+tweets_weekwise = pivot_tweets.reindex(columns=new_cols)
+
+df_friday = tweets_weekwise[5]
+df_otherdays = tweets_weekwise.iloc[:,0:6]
+
+cols = df_otherdays.columns.values
+
+p_val_dict={}
+
+for col in cols:  
+ p_value = calc_pvalue(df_friday,df_otherdays[col])
+ p_val_dict[col]=p_value
+ 
+p_val_dict 

@@ -14,14 +14,14 @@ def calc_pvalue(data1,data2):
   for _ in range(loop):
     np.random.shuffle(data)
     new_data1 = data[0:len(data1)]
-    new_data2 = data[len(data1):len(data1)+len(data2)]
+    new_data2 = data[len(data1):]
     mean_diff=abs(new_data1.mean()-new_data2.mean())
     if(mean_diff > extreme_mean_diff):
-     counter=+1
+     counter += 1
 
   return counter/loop
 
-np.random.seed(1)
+np.random.seed(0)
 
 # Move Friday as the column to allow easy split 
 old_cols = pivot_tweets.columns.values 

@@ -27,4 +27,6 @@ Date,Impression,Engagement
 ## 4. Interpreting the Results
 
 ### Make an inference about the hypothesis from previous output
-+ Apply Bonferoni correction to the results and interpret them again with adjusted results
++ Apply [Bonferoni correction](https://mathworld.wolfram.com/BonferroniCorrection.html#:~:text=The%20Bonferroni%20correction%20is%20a,the%20set%20of%20all%20comparisons)
+to the results and interpret them again with adjusted results
+

@@ -1,0 +1,40 @@
+sorted_days,sorted_p_values = zip(*sorted(day_to_p_value.items(),
+                                             key=lambda x: x[1]))
+
+# Plot the p_values as heat map
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(3, 10))
+sns.heatmap([[p_value] for p_value in sorted_p_values],
+            cmap='YlGnBu', annot=True, xticklabels=['p-value'],
+            yticklabels=sorted_days)
+plt.show()
+
+p_value_df = pd.DataFrame(p_val_dict.items(), columns=['Day', 'pvalue'])
+
+# Get Average engagement rate for each day except Friday
+avg_eng_rate_df = pd.DataFrame(tweets_weekwise.mean()[:6])
+p_value_rate_df = p_value_df.merge(avg_eng_rate_df,how='inner',left_on='Day',right_on='week_day')
+p_value_rate_df.rename(columns={0: "avg_eng_rate"},inplace=True)
+
+# Get Average engagement rate Friday and concat as a column. 
+# Column with every row having Friday's eng rate
+fri_avg_eng_rate_df = pd.DataFrame({'fri_eng_rate' : map(float,([tweets_weekwise.mean()[6:].values]*6)) })
+p_value_rate_compare_df = pd.concat([p_value_rate_df,fri_avg_eng_rate_df],axis=1)
+
+# Add Column to capture engagement difference between Friday and other days
+p_value_rate_compare_df['eng_diff'] = abs(p_value_rate_compare_df['avg_eng_rate']-p_value_rate_compare_df['fri_eng_rate'])
+
+# Significance with default significance level
+default_significance_level = 0.05
+p_value_rate_compare_df['significant'] = p_value_rate_compare_df['eng_diff'] <= default_significance_level
+
+# Significance with Bonferroni corrected significance level. 
+# Divide default significance by 6 i.e number of experiments
+significance_level = default_significance_level / 6
+print(f"Adjusted significance level is {significance_level}")
+
+p_value_rate_compare_df['bonf_significance'] = p_value_rate_compare_df['eng_diff'] <= significance_level
+p_value_rate_compare_df
+
